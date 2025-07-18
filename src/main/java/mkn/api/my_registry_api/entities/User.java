@@ -1,14 +1,22 @@
 package mkn.api.my_registry_api.entities;
 
 import jakarta.persistence.*;
+import mkn.api.my_registry_api.entities.enums.UserRole;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
+
+    // Attributes
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +28,14 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 528)
     private String password;
     private String phoneNumber;
 
     @Column(nullable = false)
     private String cpf;
+
+    private Integer role;
 
     // Constructors
 
@@ -38,10 +48,20 @@ public class User implements Serializable {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.cpf = cpf;
+        this.role = 1;
+
     }
 
     // Getters and Setters
 
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRoleStatus(UserRole role) {
+        this.role = role.getId();
+    }
 
     public String getCpf() {
         return cpf;
@@ -100,5 +120,48 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    //JWT UserDetails methods
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        if (this.role == null) {
+            return List.of();
+        }
+
+        if (this.role == 3) {
+            return List.of(new SimpleGrantedAuthority("ROLE_" +"3"), new SimpleGrantedAuthority("ROLE_" +"2"), new SimpleGrantedAuthority("ROLE_" + "1"));
+        } else if (this.role == 2) {
+            return List.of(new SimpleGrantedAuthority("ROLE_" +"2"),new SimpleGrantedAuthority("ROLE_" +"1"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_" +"1"));
+        }
+    }
+
+    @Override
+    public String getUsername() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

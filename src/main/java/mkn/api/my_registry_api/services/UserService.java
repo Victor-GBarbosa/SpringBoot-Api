@@ -24,7 +24,13 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id)); //!-1
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
     public User insert(User user) {
+        //logica de insercao
+
         return userRepository.save(user);
     }
 

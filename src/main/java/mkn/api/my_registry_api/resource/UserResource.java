@@ -24,6 +24,18 @@ public class UserResource {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id) {
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> findByEmail(@PathVariable String email) {
+        User obj = service.findByEmail(email);
+        return ResponseEntity.ok().body(obj);
+    }
+
     @PostMapping()
     public ResponseEntity<User> insert(@RequestBody User user) {
         User obj = service.insert(user);
