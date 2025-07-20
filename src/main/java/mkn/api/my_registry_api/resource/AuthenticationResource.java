@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"}, allowCredentials = "true")
 public class AuthenticationResource {
 
     @Autowired
