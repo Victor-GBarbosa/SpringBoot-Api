@@ -36,7 +36,7 @@ public class AuthenticationResource {
 
             var token = tokenService.generateToken((User)auth.getPrincipal());
 
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok( "{\"token\": \"" + token + "\"}");
         } catch (Exception e) {
 
             return ResponseEntity.status(401).body("Credenciais invalidas");

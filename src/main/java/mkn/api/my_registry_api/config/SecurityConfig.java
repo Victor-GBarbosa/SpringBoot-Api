@@ -1,6 +1,6 @@
 package mkn.api.my_registry_api.config;
 
-import jakarta.validation.constraints.NotNull;
+import mkn.api.my_registry_api.config.security.UserAuthorizationManager;
 import mkn.api.my_registry_api.config.security.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +27,8 @@ public class SecurityConfig {
 
     @Autowired
     SecurityFilter securityFilter;
+    @Autowired
+    UserAuthorizationManager userAuthorizationManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -38,12 +40,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth", "/auth/register", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users", "/users/email/{email}", "/users/{id}").hasRole("3")
+                        .requestMatchers(HttpMethod.GET, "/users/email/{email}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("3")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-        }
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -58,7 +61,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:5500"));
+            configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:5500"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
