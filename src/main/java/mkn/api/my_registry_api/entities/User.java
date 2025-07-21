@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable, UserDetails {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     // Attributes
@@ -25,14 +27,16 @@ public class User implements Serializable, UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, length = 528)
     private String password;
+    
+    @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cpf;
 
     private Integer role;

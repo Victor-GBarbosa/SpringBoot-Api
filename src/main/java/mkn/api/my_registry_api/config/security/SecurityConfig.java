@@ -1,7 +1,5 @@
-package mkn.api.my_registry_api.config;
+package mkn.api.my_registry_api.config.security;
 
-import mkn.api.my_registry_api.config.security.UserAuthorizationManager;
-import mkn.api.my_registry_api.config.security.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

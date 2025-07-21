@@ -38,8 +38,7 @@ public class AuthenticationResource {
 
             return ResponseEntity.ok( "{\"token\": \"" + token + "\"}");
         } catch (Exception e) {
-
-            return ResponseEntity.status(401).body("Credenciais invalidas");
+            return ResponseEntity.status(401).body("{\"Status\" : \"Credenciais invalidas\"}");
         }
     }
 
@@ -55,7 +54,6 @@ public class AuthenticationResource {
         User savedUser = this.repository.save(user);
 
         return ResponseEntity.ok(savedUser);
-
     }
 
 

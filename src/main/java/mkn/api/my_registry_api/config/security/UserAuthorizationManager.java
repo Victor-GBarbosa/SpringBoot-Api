@@ -32,7 +32,7 @@ public class UserAuthorizationManager implements org.springframework.security.au
 
             String token = request.getHeader("Authorization");
             if (token != null) {
-                
+
                 String emailNoToken = tokenService.validadeToken(token);
 
                 return new AuthorizationDecision(emailNoPath.equals(emailNoToken));
