@@ -16,8 +16,9 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+
     @ManyToOne
+    @JoinColumn(nullable = false)
     private User user;
 
     @Column(nullable = false)

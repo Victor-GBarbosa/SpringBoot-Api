@@ -1,7 +1,5 @@
 package mkn.api.my_registry_api.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import mkn.api.my_registry_api.entities.Category;
 import mkn.api.my_registry_api.entities.Product;
 import mkn.api.my_registry_api.entities.User;
@@ -9,7 +7,6 @@ import mkn.api.my_registry_api.repositories.CategoryRepository;
 import mkn.api.my_registry_api.repositories.ProductRepository;
 import mkn.api.my_registry_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -39,6 +36,9 @@ public class DevConfig implements CommandLineRunner {
         categoryRepository.save(category);
         Product product = new Product(newser,9.99, "Coisa", "", "Alguma coisa legal", category);
         productRepository.save(product);
+
+        Product produc2 = new Product(newser,9.99, "Outra Coisa", "", "Alguma coisa legal", category);
+        productRepository.save(produc2);
         System.out.printf("Let's go, fellas");
     }
 }

@@ -13,29 +13,29 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return repository.findAll();
     }
 
     public User findById(long id) {
-        return userRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id)); //!-1
     }
 
     public User findByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return repository.findUserByEmail(email);
     }
 
     public User insert(User user) {
         //logica de insercao
 
-        return userRepository.save(user);
+        return repository.save(user);
     }
 
     public void delete(long id) {
-        userRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
 
