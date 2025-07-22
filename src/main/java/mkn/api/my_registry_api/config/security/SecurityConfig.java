@@ -39,7 +39,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth", "/auth/register", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/email/{email}").access(userAuthorizationManager)
-                        .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("3")
                         .anyRequest().authenticated()
                 )
