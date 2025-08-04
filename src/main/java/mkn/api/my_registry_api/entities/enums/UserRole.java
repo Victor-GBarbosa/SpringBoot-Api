@@ -2,8 +2,9 @@ package mkn.api.my_registry_api.entities.enums;
 
 public enum UserRole {
     USER(1),
-    ADMIN(2),
-    MASTER(3);
+    SELLER(2),
+    ADMIN(3),
+    MASTER(4);
 
     private int id;
 

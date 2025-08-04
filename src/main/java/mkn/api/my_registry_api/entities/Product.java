@@ -9,7 +9,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -51,6 +50,14 @@ public class Product implements Serializable {
 
     //Getters and Setters
 
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Category getCategory() {
         return category;

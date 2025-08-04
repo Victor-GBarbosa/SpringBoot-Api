@@ -35,13 +35,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth", "/auth/register", "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/email/{email}").access(userAuthorizationManager)
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("3")
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("MASTER")
+//                        .requestMatchers(HttpMethod.POST, "/product/**").hasRole("2")
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -130,18 +131,33 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         if (this.role == null) {
             return List.of();
         }
 
-        if (this.role == 3) {
-            return List.of(new SimpleGrantedAuthority("ROLE_" +"3"), new SimpleGrantedAuthority("ROLE_" +"2"), new SimpleGrantedAuthority("ROLE_" + "1"));
-        } else if (this.role == 2) {
-            return List.of(new SimpleGrantedAuthority("ROLE_" +"2"),new SimpleGrantedAuthority("ROLE_" +"1"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_" +"1"));
+        try {
+            UserRole userRole = UserRole.valueOf(this.role);
+            return getAuthoritiesForRole(userRole);
+        } catch (IllegalArgumentException e) {
+            return List.of();
         }
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthoritiesForRole(UserRole userRole) {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        // Adiciona o role atual
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.name()));
+
+        // Adiciona roles de menor hierarquia baseado no ID
+        // Um role com ID maior inclui automaticamente todos os roles com ID menor
+        for (UserRole role : UserRole.values()) {
+            if (role.getId() < userRole.getId()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+            }
+        }
+
+        return authorities;
     }
 
     @Override
