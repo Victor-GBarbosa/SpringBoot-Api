@@ -17,7 +17,7 @@ public class Product implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @Column(nullable = false)
