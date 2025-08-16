@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "product").hasRole("SELLER")
                         .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("MASTER")
+                        .requestMatchers(HttpMethod.DELETE, "users/{userEmail}").hasRole("MASTER")
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

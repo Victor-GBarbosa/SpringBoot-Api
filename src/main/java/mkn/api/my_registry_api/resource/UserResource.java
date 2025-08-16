@@ -17,6 +17,8 @@ public class UserResource {
 
     @Autowired
     private UserService service;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
@@ -41,6 +43,16 @@ public class UserResource {
         User obj = service.insert(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
+    }
+
+    @DeleteMapping("/{userEmail}")
+    public ResponseEntity<Void> delete(@PathVariable String userEmail) {
+        if(userService.findByEmail(userEmail) != null) {
+            userService.deleteByEmail(userEmail);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

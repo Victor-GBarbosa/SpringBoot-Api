@@ -29,9 +29,13 @@ public class UserService {
     }
 
     public User insert(User user) {
-        //logica de insercao
-
         return repository.save(user);
+    }
+
+    public void deleteByEmail(String email) {
+       User userToDelete = findByEmail(email);
+       repository.deleteById(userToDelete.getId());
+
     }
 
     public void delete(long id) {

@@ -47,7 +47,7 @@ public class DevConfig implements CommandLineRunner {
 //        productRepository.save(produc2);
 
         
-        System.out.println(tokenService.validadeToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InZpY3RvcjVAZ21haWwuY29tIiwiZXhwIjoxNzU0Njg4NjE0fQ.yvrWQSIGS_7h92kEXaEkv6T-G2hFPHGT9-8AH0fPnhU"));
-        System.out.printf("Let's go, fellas");
+        System.out.println(tokenService.validadeToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InZpY3RvcjVAZ21haWwuY29tIiwiZXhwIjoxNzU0NzAyMTMxfQ.Kg2S-_wk4QmZsAqHXYiYJeYUei7hmTFI8sCfAzsnrH0"));
+        System.out.printf("Let's go, fellaIs");
     }
 }
