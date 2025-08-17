@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mkn.api.my_registry_api.config.security.wrapper.CachedBodyHttpServletRequest;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.repositories.UserRepository;
 import mkn.api.my_registry_api.services.TokenService;
@@ -25,7 +26,8 @@ public class  SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var token = this.recoverToken(request);
+        CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest(request);
+        var token = this.recoverToken(wrappedRequest);
         if(token != null) {
             var subject = tokenService.validadeToken(token);
             User user = userRepository.findUserByEmail(subject);
@@ -33,7 +35,7 @@ public class  SecurityFilter extends OncePerRequestFilter {
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(wrappedRequest, response);
     }
 
     private String recoverToken(HttpServletRequest request) {

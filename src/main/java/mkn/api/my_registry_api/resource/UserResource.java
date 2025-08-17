@@ -1,7 +1,8 @@
 package mkn.api.my_registry_api.resource;
 
+import jakarta.validation.Valid;
 import mkn.api.my_registry_api.entities.User;
-import mkn.api.my_registry_api.repositories.UserRepository;
+import mkn.api.my_registry_api.entities.dtos.UserPatchRequest;
 import mkn.api.my_registry_api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,6 @@ public class UserResource {
 
     @Autowired
     private UserService service;
-    @Autowired
-    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
@@ -45,10 +44,22 @@ public class UserResource {
         return ResponseEntity.created(uri).body(obj);
     }
 
+    @PatchMapping("/{userEmail}")
+    public ResponseEntity<User> partialUpdate(
+            @PathVariable String userEmail,
+            @Valid @RequestBody UserPatchRequest userPatchRequest) {
+    if(service.partialUpdate(userEmail, userPatchRequest) != null) {
+        User updatedUser = service.partialUpdate(userEmail, userPatchRequest);
+        return ResponseEntity.ok(updatedUser);
+    } else {
+        return ResponseEntity.badRequest().build();
+    }
+    }
+
     @DeleteMapping("/{userEmail}")
     public ResponseEntity<Void> delete(@PathVariable String userEmail) {
-        if(userService.findByEmail(userEmail) != null) {
-            userService.deleteByEmail(userEmail);
+        if(service.findByEmail(userEmail) != null) {
+            service.deleteByEmail(userEmail);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

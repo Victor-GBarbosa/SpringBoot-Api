@@ -27,6 +27,8 @@ public class SecurityConfig {
     SecurityFilter securityFilter;
     @Autowired
     UserAuthorizationManager userAuthorizationManager;
+    @Autowired
+    UserRolePatchAutorizationManager userRolePatchAutorizationManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -41,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "product").hasRole("SELLER")
                         .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("MASTER")
                         .requestMatchers(HttpMethod.DELETE, "users/{userEmail}").hasRole("MASTER")
+                        .requestMatchers(HttpMethod.PATCH, "users/{userEmail}").access(userRolePatchAutorizationManager)
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
