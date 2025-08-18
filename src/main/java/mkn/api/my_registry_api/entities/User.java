@@ -97,7 +97,7 @@ public class User implements Serializable, UserDetails {
         this.name = name;
     }
 
-    @JsonIgnore
+    
     public String getPassword() {
         return password;
     }
