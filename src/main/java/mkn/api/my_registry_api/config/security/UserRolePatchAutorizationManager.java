@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class UserRolePatchAutorizationManager implements org.springframework.security.authorization.AuthorizationManager<RequestAuthorizationContext> {
@@ -26,10 +28,17 @@ public class UserRolePatchAutorizationManager implements org.springframework.sec
     TokenService tokenService;
     @Autowired
     UserRepository userRepository;
+    private final Pattern emailPattern = Pattern.compile("/users/([^/]+)");
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         HttpServletRequest request = context.getRequest();
+        String path = request.getRequestURI();
+        Matcher matcher = emailPattern.matcher(path);
+        String pathEmail = null;
+        if (matcher.find()) {
+            pathEmail = matcher.group(1);
+        }
         try {
             BufferedReader reader = request.getReader();
             StringBuilder bodyBuilder = new StringBuilder();
@@ -48,15 +57,18 @@ public class UserRolePatchAutorizationManager implements org.springframework.sec
 
 
             User user = userRepository.findUserByEmail(tokenService.validadeToken(token));
-
-            if (user.getRole() <= 3) {
+            System.out.println("TOKEN = " + token + tokenService.validadeToken(token) + "\n" +  pathEmail +"\n\n\n\n\n\n");
+            System.out.println(pathEmail == user.getEmail());
+            if (user.getRole() <= 3 && user.getEmail().equals(pathEmail)) {
                 if(newRole <= 2) {
                     return new AuthorizationDecision(true);
                 } else {
                     return new AuthorizationDecision(false);
                 }
-            } else {
+            } else if (user.getRole() > 3) {
                 return new AuthorizationDecision(true);
+            } else {
+                return new AuthorizationDecision(false);
             }
             } catch (IOException e) {
             throw new RuntimeException(e);
