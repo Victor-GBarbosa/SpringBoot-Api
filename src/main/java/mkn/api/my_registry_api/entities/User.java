@@ -1,5 +1,6 @@
 package mkn.api.my_registry_api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -96,6 +97,7 @@ public class User implements Serializable, UserDetails {
         this.name = name;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

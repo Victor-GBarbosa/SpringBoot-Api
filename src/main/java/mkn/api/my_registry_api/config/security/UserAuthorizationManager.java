@@ -29,7 +29,6 @@ public class UserAuthorizationManager implements org.springframework.security.au
         if (matcher.find()) {
             String emailNoPath = matcher.group(1);
 
-
             String token = request.getHeader("Authorization");
             if (token != null) {
 

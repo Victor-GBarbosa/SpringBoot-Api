@@ -33,3 +33,4 @@ build/
 .vscode/
 
 src/main/resources/application-dev.properties
+src/main/java/mkn/api/my_registry_api/config/DevConfig.java

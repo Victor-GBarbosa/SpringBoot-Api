@@ -27,6 +27,8 @@ public class SecurityConfig {
     SecurityFilter securityFilter;
     @Autowired
     UserAuthorizationManager userAuthorizationManager;
+    @Autowired
+    UserRolePatchAutorizationManager userRolePatchAutorizationManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -38,8 +40,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth", "/auth/register", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/email/{email}").access(userAuthorizationManager)
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "product").hasRole("SELLER")
                         .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("MASTER")
-//                        .requestMatchers(HttpMethod.POST, "/product/**").hasRole("2")
+                        .requestMatchers(HttpMethod.DELETE, "users/{userEmail}").hasRole("MASTER")
+                        .requestMatchers(HttpMethod.PATCH, "users/{userEmail}").access(userRolePatchAutorizationManager)
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -60,7 +64,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:5500", "https://api-front-ladhcfu94-victor-hugos-projects-c1f3228c.vercel.app/", "https://api-front-blue.vercel.app/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

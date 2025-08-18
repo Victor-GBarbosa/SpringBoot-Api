@@ -14,7 +14,9 @@ public enum UserRole {
                 return role;
             }
         }
-        throw new IllegalArgumentException("Invalid UserRole id: " + id);
+        return null;
+//        throw new IllegalArgumentException("Invalid UserRole id: " + id);
+
     }
 
     private UserRole(int id) {

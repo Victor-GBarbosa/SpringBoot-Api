@@ -1,7 +1,7 @@
 package mkn.api.my_registry_api.resource;
 
 import jakarta.validation.Valid;
-import mkn.api.my_registry_api.entities.AuthenticationDTO;
+import mkn.api.my_registry_api.entities.dtos.AuthenticationDTO;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import mkn.api.my_registry_api.repositories.UserRepository;
