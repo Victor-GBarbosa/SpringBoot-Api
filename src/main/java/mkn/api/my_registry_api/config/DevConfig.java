@@ -1,12 +1,8 @@
 package mkn.api.my_registry_api.config;
 
-import mkn.api.my_registry_api.entities.Category;
-import mkn.api.my_registry_api.entities.Product;
-import mkn.api.my_registry_api.entities.User;
+import mkn.api.my_registry_api.entities.*;
 import mkn.api.my_registry_api.entities.enums.UserRole;
-import mkn.api.my_registry_api.repositories.CategoryRepository;
-import mkn.api.my_registry_api.repositories.ProductRepository;
-import mkn.api.my_registry_api.repositories.UserRepository;
+import mkn.api.my_registry_api.repositories.*;
 import mkn.api.my_registry_api.services.TokenService;
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,26 +24,48 @@ public class DevConfig implements CommandLineRunner {
     @Autowired
     ProductRepository productRepository;
     @Autowired
+    OrderProductRepository orderProductRepository;
+    @Autowired
+    OrderRepository orderRepository;
+    @Autowired
     TokenService tokenService;
 
 
     @Override
     public void run(String... args) throws Exception {
+        User newser = new User("Victor", "victor5@gmail.com", passwordEncoder.encode("123"), "91 8312-9239", "007-132-190-00" );
+        newser.setRoleStatus(UserRole.MASTER);
+        userRepository.save(newser);
 
-//            User newser = new User("Victor", "victor@gmail.com", passwordEncoder.encode("newPassowrd"), "91 8312-9239", "007-132-190-00" );
-//            newser.setRoleStatus(UserRole.SELLER);
-//            userRepository.save(newser);
-//
-//        Category category = new Category("Categoria massa");
-//        categoryRepository.save(category);
-//        Product product = new Product(newser,9.99, "Coisa", "", "Alguma coisa legal", category);
-//        productRepository.save(product);
-//
-//        Product produc2 = new Product(newser,9.99, "Outra Coisa", "", "Alguma coisa legal", category);
-//        productRepository.save(produc2);
+        Category category = new Category("Categoria massa");
+        categoryRepository.save(category);
+        Product product = new Product(newser,9.99, "Coisa", "", "Alguma coisa legal", category);
+        productRepository.save(product);
 
-        
-        System.out.println(tokenService.validadeToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InZpY3RvcjVAZ21haWwuY29tIiwiZXhwIjoxNzU0NzAyMTMxfQ.Kg2S-_wk4QmZsAqHXYiYJeYUei7hmTFI8sCfAzsnrH0"));
-        System.out.printf("Let's go, fellaIs");
+        Product product1 = new Product(newser,9.99, "Outra Coisa", "", "Alguma coisa legal", category);
+        productRepository.save(product1);
+
+        Order order = new Order();
+        orderRepository.save(order);
+        OrderProduct op = new OrderProduct(product, 1, order);
+
+        orderProductRepository.save(op);
+        OrderProduct op2 = new OrderProduct(product1, 2, order);
+        orderProductRepository.save(op2);
+
+        Order order2 = new Order();
+        orderRepository.save(order2);
+        OrderProduct op12 = new OrderProduct(product, 1, order2);
+        orderProductRepository.save(op12);
+        OrderProduct op22 = new OrderProduct(product1, 2, order2);
+        orderProductRepository.save(op22);
+
+        newser.setOrder(order);
+        userRepository.save(newser);
+
+//        User findedUser = userRepository.findUserByEmail(newser.getEmail());
+//        System.out.println(findedUser.getOrder().getOrderProductList().get(0).getProduct().getName());
+
+        System.out.printf("Let's go, fellas");
     }
 }

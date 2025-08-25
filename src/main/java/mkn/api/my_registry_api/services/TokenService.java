@@ -44,7 +44,6 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-            System.out.println("Subject extraído do token: " + subject);
             return subject;
 
         } catch (JWTVerificationException e) {

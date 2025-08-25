@@ -1,4 +1,4 @@
-package mkn.api.my_registry_api.config.security;
+package mkn.api.my_registry_api.config.security.authorizationManager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import mkn.api.my_registry_api.services.TokenService;

@@ -1,10 +1,9 @@
-package mkn.api.my_registry_api.config.security;
+package mkn.api.my_registry_api.config.security.authorizationManager;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import mkn.api.my_registry_api.config.security.wrapper.CachedBodyHttpServletRequest;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.repositories.UserRepository;
 import mkn.api.my_registry_api.services.TokenService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

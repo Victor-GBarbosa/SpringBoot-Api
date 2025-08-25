@@ -1,6 +1,7 @@
 package mkn.api.my_registry_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +44,10 @@ public class User implements Serializable, UserDetails {
 
     private Integer role;
 
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Order order;
+
     // Constructors
 
     public User() {
@@ -55,11 +60,20 @@ public class User implements Serializable, UserDetails {
         this.phoneNumber = phoneNumber;
         this.cpf = cpf;
         this.role = 1;
+        this.order = new Order();
 
     }
 
     // Getters and Setters
 
+    @JsonIgnore
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
     public Integer getRole() {
         return role;
