@@ -40,24 +40,24 @@ public class OrderProductResource {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PostMapping("/{email}/add")
-    public ResponseEntity<?> insert(@RequestBody OrderProduct orderProduct, @PathVariable String email) {
-        User user =  userService.findByEmail(email);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if(user.getOrder().getOrderStatus() != OrderStatus.CART) {
-            return ResponseEntity.badRequest().body("Invalid request: order status is not CART");
-        }
-        orderProduct.setProduct(productService.findById(orderProduct.getProduct().getId()));
-        orderProduct.reCalcSubtotal();
-        orderProduct.addToOrder(user.getOrder());
-
-        OrderProduct obj = service.insert(orderProduct);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
-    }
+//    @PostMapping("/{email}/add")
+//    public ResponseEntity<?> insert(@RequestBody OrderProduct orderProduct, @PathVariable String email) {
+//        User user =  userService.findByEmail(email);
+//        if (user == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        if(user.getOrder().getOrderStatus() != OrderStatus.CART) {
+//            return ResponseEntity.badRequest().body("Invalid request: order status is not CART");
+//        }
+//        orderProduct.setProduct(productService.findById(orderProduct.getProduct().getId()));
+//        orderProduct.reCalcSubtotal();
+//        orderProduct.addToOrder(user.getOrder());
+//
+//        OrderProduct obj = service.insert(orderProduct);
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+//        return ResponseEntity.created(uri).body(obj);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {

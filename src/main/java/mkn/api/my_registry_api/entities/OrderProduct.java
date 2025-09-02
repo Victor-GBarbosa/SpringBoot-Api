@@ -119,4 +119,11 @@ public class OrderProduct implements Serializable {
     public int hashCode() {
         return Objects.hash(id, product);
     }
+
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "product=" + product +
+                '}';
+    }
 }

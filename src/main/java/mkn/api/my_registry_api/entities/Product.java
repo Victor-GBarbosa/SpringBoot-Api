@@ -1,5 +1,6 @@
 package mkn.api.my_registry_api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -50,7 +51,7 @@ public class Product implements Serializable {
 
     //Getters and Setters
 
-
+    @JsonIgnore
     public User getUser() {
         return user;
     }
@@ -120,6 +121,14 @@ public class Product implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
 

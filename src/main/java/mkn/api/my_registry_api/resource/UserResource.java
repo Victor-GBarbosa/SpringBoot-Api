@@ -1,6 +1,7 @@
 package mkn.api.my_registry_api.resource;
 
 import jakarta.validation.Valid;
+import mkn.api.my_registry_api.entities.Order;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.entities.dtos.UserPatchRequest;
 import mkn.api.my_registry_api.services.UserService;
@@ -18,6 +19,8 @@ public class UserResource {
 
     @Autowired
     private UserService service;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
@@ -54,6 +57,13 @@ public class UserResource {
     } else {
         return ResponseEntity.badRequest().build();
     }
+    }
+
+    //Get User Orders
+    @GetMapping("/{userEmail}/orders")
+    public ResponseEntity<List<Order>> getOrders(@PathVariable String userEmail) {
+        List<Order> orders = userService.getUserOrders(userEmail);
+        return ResponseEntity.ok().body(orders);
     }
 
     @DeleteMapping("/{userEmail}")

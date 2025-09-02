@@ -1,8 +1,9 @@
 package mkn.api.my_registry_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import mkn.api.my_registry_api.entities.enums.OrderStatus;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_user")
@@ -45,8 +47,44 @@ public class User implements Serializable, UserDetails {
     private Integer role;
 
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Order order;
+    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private List<Order> order = new ArrayList();
+
+    //Methods
+
+    public void addOrder(Order order) {
+
+        boolean hasUnfinishedOrder = this.order.stream().anyMatch(orderItem -> orderItem.getOrderStatus() == OrderStatus.CART);
+
+        if(hasUnfinishedOrder) {
+
+        } else {
+            this.order.add(order);
+        }
+    }
+
+    public boolean addOrderProduct(OrderProduct orderProduct) {
+        return this.order.stream()
+                .filter(o -> o.getOrderStatus() == OrderStatus.CART)
+                .findFirst()
+                .map(o -> {
+                    o.addOrderProduct(orderProduct);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    public boolean closeOrder() {
+        List<Order> orderToClose = this.order.stream()
+                .filter(o -> o.getOrderStatus() == OrderStatus.CART).collect(Collectors.toList());
+        if(orderToClose.size() != 1) {
+            return false;
+        } else {
+            orderToClose.get(0).setOrderStatus(OrderStatus.PENDING_PAYMENT);
+            return true;
+        }
+    }
 
     // Constructors
 
@@ -60,19 +98,15 @@ public class User implements Serializable, UserDetails {
         this.phoneNumber = phoneNumber;
         this.cpf = cpf;
         this.role = 1;
-        this.order = new Order();
+        this.order.add(new Order());
 
     }
 
     // Getters and Setters
 
     @JsonIgnore
-    public Order getOrder() {
+    public List<Order> getOrder() {
         return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public Integer getRole() {
@@ -199,5 +233,13 @@ public class User implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", order=" + order.toString() +
+                '}';
     }
 }

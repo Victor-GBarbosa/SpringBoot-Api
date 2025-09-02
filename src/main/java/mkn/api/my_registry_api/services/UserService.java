@@ -2,6 +2,7 @@ package mkn.api.my_registry_api.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import mkn.api.my_registry_api.entities.Order;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.entities.dtos.UserPatchRequest;
 import mkn.api.my_registry_api.entities.enums.UserRole;
@@ -44,6 +45,12 @@ public class UserService {
 
     }
 
+    @Transactional
+    public List<Order> getUserOrders(String userEmail) {
+        User user = findByEmail(userEmail);
+        return user.getOrder();
+    }
+
     public User partialUpdate(String email, UserPatchRequest patchRequest) {
         User existingUser = repository.findUserByEmail(email);
         if(existingUser == null) {
@@ -73,8 +80,6 @@ public class UserService {
             }
         } catch (BadRequestException e) {
             return null;
-//            e.printStackTrace();
-
         }
 
         return repository.save(existingUser);

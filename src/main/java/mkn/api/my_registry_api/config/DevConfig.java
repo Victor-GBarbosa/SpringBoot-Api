@@ -46,22 +46,30 @@ public class DevConfig implements CommandLineRunner {
         productRepository.save(product1);
 
         Order order = new Order();
-        orderRepository.save(order);
         OrderProduct op = new OrderProduct(product, 1, order);
-
+        order.addOrderProduct(op);
+        orderRepository.save(order);
         orderProductRepository.save(op);
+
         OrderProduct op2 = new OrderProduct(product1, 2, order);
+        order.addOrderProduct(op2);
         orderProductRepository.save(op2);
+        orderRepository.save(order);
 
-        Order order2 = new Order();
-        orderRepository.save(order2);
-        OrderProduct op12 = new OrderProduct(product, 1, order2);
-        orderProductRepository.save(op12);
-        OrderProduct op22 = new OrderProduct(product1, 2, order2);
-        orderProductRepository.save(op22);
+//        Order order2 = new Order();
+//        orderRepository.save(order2);
+//        OrderProduct op12 = new OrderProduct(product, 1, order2);
+//        orderProductRepository.save(op12);
+//        OrderProduct op22 = new OrderProduct(product1, 2, order2);
+//        orderProductRepository.save(op22);
 
-        newser.setOrder(order);
+//        order.addOrderProduct(op);
+//        order.addOrderProduct(op2);
+        newser.addOrder(order);
+        orderRepository.save(order);
         userRepository.save(newser);
+
+
 
 //        User findedUser = userRepository.findUserByEmail(newser.getEmail());
 //        System.out.println(findedUser.getOrder().getOrderProductList().get(0).getProduct().getName());
