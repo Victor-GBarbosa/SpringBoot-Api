@@ -2,7 +2,6 @@ package mkn.api.my_registry_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import mkn.api.my_registry_api.entities.enums.OrderStatus;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -53,14 +52,14 @@ public class User implements Serializable, UserDetails {
 
     //Methods
 
-    public void addOrder(Order order) {
+    public void addNewOrder() {
 
         boolean hasUnfinishedOrder = this.order.stream().anyMatch(orderItem -> orderItem.getOrderStatus() == OrderStatus.CART);
 
         if(hasUnfinishedOrder) {
-
+            closeOrder(this.order);
         } else {
-            this.order.add(order);
+            this.order.add(new Order());
         }
     }
 
@@ -75,13 +74,13 @@ public class User implements Serializable, UserDetails {
                 .orElse(false);
     }
 
-    public boolean closeOrder() {
-        List<Order> orderToClose = this.order.stream()
+    private boolean closeOrder(List<Order> orders) {
+        orders.stream()
                 .filter(o -> o.getOrderStatus() == OrderStatus.CART).collect(Collectors.toList());
-        if(orderToClose.size() != 1) {
+        if(orders.size() != 1) {
             return false;
         } else {
-            orderToClose.get(0).setOrderStatus(OrderStatus.PENDING_PAYMENT);
+            orders.get(0).setOrderStatus(OrderStatus.PENDING_PAYMENT);
             return true;
         }
     }
@@ -104,7 +103,14 @@ public class User implements Serializable, UserDetails {
 
     // Getters and Setters
 
-    @JsonIgnore
+    public Order getUserCart () {
+        return this.order.stream()
+                .filter(x -> x.getOrderStatus() == OrderStatus.CART)
+                .findFirst()
+                .get();
+    }
+
+//    @JsonIgnore
     public List<Order> getOrder() {
         return order;
     }
@@ -209,6 +215,8 @@ public class User implements Serializable, UserDetails {
 
         return authorities;
     }
+
+
 
     @Override
     public String getUsername() {

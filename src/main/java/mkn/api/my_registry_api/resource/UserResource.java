@@ -2,8 +2,11 @@ package mkn.api.my_registry_api.resource;
 
 import jakarta.validation.Valid;
 import mkn.api.my_registry_api.entities.Order;
+import mkn.api.my_registry_api.entities.OrderProduct;
 import mkn.api.my_registry_api.entities.User;
 import mkn.api.my_registry_api.entities.dtos.UserPatchRequest;
+import mkn.api.my_registry_api.repositories.UserRepository;
+import mkn.api.my_registry_api.services.OrderService;
 import mkn.api.my_registry_api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,10 @@ public class UserResource {
     private UserService service;
     @Autowired
     private UserService userService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
@@ -65,6 +72,27 @@ public class UserResource {
         List<Order> orders = userService.getUserOrders(userEmail);
         return ResponseEntity.ok().body(orders);
     }
+
+    //Add Product to user shopping cart
+    @PatchMapping("/{userEmail}/order/addProduct")
+    public ResponseEntity<User> addProductToCart(@PathVariable String userEmail,
+                                                  @Valid @RequestBody OrderProduct orderProduct) {
+        return ResponseEntity.ok().body(userService.addProductToUserCart(
+                userRepository.findUserByEmail(userEmail),
+                orderProduct
+        ));
+    }
+
+    //Get user shopping cart
+    @GetMapping("/{userEmail}/cart")
+    public ResponseEntity<Order> getUserShoppingCart (@PathVariable String userEmail) {
+        return ResponseEntity.ok().body(userService.getUserCart(userEmail));
+    }
+//    @PostMapping("/{userEmail}/orders")
+//    public ResponseEntity<Object> addOrder(@PathVariable String userEmail, @Valid @RequestBody Order order) {
+//        User user = userRepository.findUserByEmail(userEmail);
+//        user.addNewOrder(order);
+//    }
 
     @DeleteMapping("/{userEmail}")
     public ResponseEntity<Void> delete(@PathVariable String userEmail) {

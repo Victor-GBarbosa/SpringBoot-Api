@@ -4,7 +4,6 @@ import mkn.api.my_registry_api.entities.*;
 import mkn.api.my_registry_api.entities.enums.UserRole;
 import mkn.api.my_registry_api.repositories.*;
 import mkn.api.my_registry_api.services.TokenService;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +64,7 @@ public class DevConfig implements CommandLineRunner {
 
 //        order.addOrderProduct(op);
 //        order.addOrderProduct(op2);
-        newser.addOrder(order);
+//        newser.addNewOrder();
         orderRepository.save(order);
         userRepository.save(newser);
 

@@ -52,7 +52,9 @@ public class Order implements Serializable {
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        this.orderProductList.add(orderProduct);
+        if(this.orderStatus == OrderStatus.CART) {
+            this.orderProductList.add(orderProduct);
+        }
     }
 
     //Constructors
