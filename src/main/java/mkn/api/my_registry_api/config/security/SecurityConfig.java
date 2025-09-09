@@ -41,6 +41,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth", "/auth/register", "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/email/{email}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.GET, "/users/{userEmail}/cart").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.POST, "/users/{userEmail}/finishBuy").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userEmail}/order/addProduct").access(userAuthorizationManager)
                         .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "product").hasRole("SELLER")
                         .requestMatchers(HttpMethod.GET, "/users", "/users/{id}").hasRole("MASTER")

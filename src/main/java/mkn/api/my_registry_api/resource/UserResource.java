@@ -8,6 +8,7 @@ import mkn.api.my_registry_api.entities.dtos.UserPatchRequest;
 import mkn.api.my_registry_api.repositories.UserRepository;
 import mkn.api.my_registry_api.services.OrderService;
 import mkn.api.my_registry_api.services.UserService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,9 +69,15 @@ public class UserResource {
 
     //Get User Orders
     @GetMapping("/{userEmail}/orders")
-    public ResponseEntity<List<Order>> getOrders(@PathVariable String userEmail) {
-        List<Order> orders = userService.getUserOrders(userEmail);
-        return ResponseEntity.ok().body(orders);
+    public ResponseEntity<?> getOrders(@PathVariable String userEmail) {
+        try {
+            List<Order> orders = userService.getUserOrders(userEmail);
+            return ResponseEntity.ok().body(orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
+        }
+
     }
 
     //Add Product to user shopping cart
@@ -88,11 +95,19 @@ public class UserResource {
     public ResponseEntity<Order> getUserShoppingCart (@PathVariable String userEmail) {
         return ResponseEntity.ok().body(userService.getUserCart(userEmail));
     }
-//    @PostMapping("/{userEmail}/orders")
-//    public ResponseEntity<Object> addOrder(@PathVariable String userEmail, @Valid @RequestBody Order order) {
-//        User user = userRepository.findUserByEmail(userEmail);
-//        user.addNewOrder(order);
-//    }
+
+    //Close cart order
+    @PostMapping("/{userEmail}/finishBuy")
+    public ResponseEntity<Object> finishUserBuy(@PathVariable String userEmail) {
+        try {
+            if (userService.closeOrder(userEmail)) {
+                return ResponseEntity.ok().body(userRepository.findUserByEmail(userEmail).getUserCart());
+            }
+            return ResponseEntity.badRequest().build();
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().body("error: ");
+        }
+    }
 
     @DeleteMapping("/{userEmail}")
     public ResponseEntity<Void> delete(@PathVariable String userEmail) {

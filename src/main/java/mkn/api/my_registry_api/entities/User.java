@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +58,7 @@ public class User implements Serializable, UserDetails {
         boolean hasUnfinishedOrder = this.order.stream().anyMatch(orderItem -> orderItem.getOrderStatus() == OrderStatus.CART);
 
         if(hasUnfinishedOrder) {
-            closeOrder(this.order);
+            closeOrder();
         } else {
             this.order.add(new Order());
         }
@@ -69,18 +70,24 @@ public class User implements Serializable, UserDetails {
                 .findFirst()
                 .map(o -> {
                     o.addOrderProduct(orderProduct);
+
                     return true;
                 })
                 .orElse(false);
     }
 
-    private boolean closeOrder(List<Order> orders) {
-        orders.stream()
-                .filter(o -> o.getOrderStatus() == OrderStatus.CART).collect(Collectors.toList());
-        if(orders.size() != 1) {
+    public boolean closeOrder() {
+        List<Order> orderToClose = this.order.stream()
+                .filter(o -> o.getOrderStatus() == OrderStatus.CART).toList();
+        if(orderToClose.size() != 1) {
             return false;
         } else {
-            orders.get(0).setOrderStatus(OrderStatus.PENDING_PAYMENT);
+            orderToClose.getFirst().setMoment(Instant.now());
+            if(orderToClose.getFirst().getOrderProductList().isEmpty()) {
+                throw new IllegalStateException();
+            }
+            orderToClose.getFirst().setOrderStatus(OrderStatus.PENDING_PAYMENT);
+            this.addNewOrder();
             return true;
         }
     }
@@ -110,7 +117,7 @@ public class User implements Serializable, UserDetails {
                 .get();
     }
 
-//    @JsonIgnore
+    @JsonIgnore
     public List<Order> getOrder() {
         return order;
     }

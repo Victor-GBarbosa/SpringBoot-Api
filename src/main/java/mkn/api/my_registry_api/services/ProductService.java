@@ -3,6 +3,7 @@ package mkn.api.my_registry_api.services;
 import jakarta.transaction.Transactional;
 import mkn.api.my_registry_api.entities.Product;
 import mkn.api.my_registry_api.repositories.ProductRepository;
+import mkn.api.my_registry_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ public class ProductService {
 
     @Autowired
     private ProductRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Product> findAll() {
         return repository.findAll();
@@ -32,8 +35,9 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id)); //!-1
     }
 
-    public Product insert(Product user) {
-        return repository.save(user);
+    public Product insert(Product product) {
+        product.setUser(userRepository.findUserById(product.getUser().getId()));
+        return repository.save(product);
     }
 
     public void delete(long id) {

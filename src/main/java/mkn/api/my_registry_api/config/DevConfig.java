@@ -32,46 +32,46 @@ public class DevConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User newser = new User("Victor", "victor5@gmail.com", passwordEncoder.encode("123"), "91 8312-9239", "007-132-190-00" );
-        newser.setRoleStatus(UserRole.MASTER);
-        userRepository.save(newser);
-
-        Category category = new Category("Categoria massa");
-        categoryRepository.save(category);
-        Product product = new Product(newser,9.99, "Coisa", "", "Alguma coisa legal", category);
-        productRepository.save(product);
-
-        Product product1 = new Product(newser,9.99, "Outra Coisa", "", "Alguma coisa legal", category);
-        productRepository.save(product1);
-
-        Order order = new Order();
-        OrderProduct op = new OrderProduct(product, 1, order);
-        order.addOrderProduct(op);
-        orderRepository.save(order);
-        orderProductRepository.save(op);
-
-        OrderProduct op2 = new OrderProduct(product1, 2, order);
-        order.addOrderProduct(op2);
-        orderProductRepository.save(op2);
-        orderRepository.save(order);
-
-//        Order order2 = new Order();
-//        orderRepository.save(order2);
-//        OrderProduct op12 = new OrderProduct(product, 1, order2);
-//        orderProductRepository.save(op12);
-//        OrderProduct op22 = new OrderProduct(product1, 2, order2);
-//        orderProductRepository.save(op22);
-
+//        User newser = new User("Victor", "victor5@gmail.com", passwordEncoder.encode("123"), "91 8312-9239", "007-132-190-00" );
+//        newser.setRoleStatus(UserRole.MASTER);
+//        userRepository.save(newser);
+//
+//        Category category = new Category("Categoria massa");
+//        categoryRepository.save(category);
+//        Product product = new Product(newser,9.99, "Coisa", "", "Alguma coisa legal", category);
+//        productRepository.save(product);
+//
+//        Product product1 = new Product(newser,9.99, "Outra Coisa", "", "Alguma coisa legal", category);
+//        productRepository.save(product1);
+//
+//        Order order = new Order();
+//        OrderProduct op = new OrderProduct(product, 1, order);
 //        order.addOrderProduct(op);
+//        orderRepository.save(order);
+//        orderProductRepository.save(op);
+//
+//        OrderProduct op2 = new OrderProduct(product1, 2, order);
 //        order.addOrderProduct(op2);
-//        newser.addNewOrder();
-        orderRepository.save(order);
-        userRepository.save(newser);
-
-
-
-//        User findedUser = userRepository.findUserByEmail(newser.getEmail());
-//        System.out.println(findedUser.getOrder().getOrderProductList().get(0).getProduct().getName());
+//        orderProductRepository.save(op2);
+//        orderRepository.save(order);
+//
+////        Order order2 = new Order();
+////        orderRepository.save(order2);
+////        OrderProduct op12 = new OrderProduct(product, 1, order2);
+////        orderProductRepository.save(op12);
+////        OrderProduct op22 = new OrderProduct(product1, 2, order2);
+////        orderProductRepository.save(op22);
+//
+////        order.addOrderProduct(op);
+////        order.addOrderProduct(op2);
+////        newser.addNewOrder();
+//        orderRepository.save(order);
+//        userRepository.save(newser);
+//
+//
+//
+////        User findedUser = userRepository.findUserByEmail(newser.getEmail());
+////        System.out.println(findedUser.getOrder().getOrderProductList().get(0).getProduct().getName());
 
         System.out.printf("Let's go, fellas");
     }

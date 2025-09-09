@@ -24,6 +24,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonManagedReference
     @OneToMany(
             mappedBy = "order",
             cascade = {CascadeType.ALL},

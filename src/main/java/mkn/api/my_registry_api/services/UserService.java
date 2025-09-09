@@ -88,11 +88,27 @@ public class UserService {
         }
     }
 
+    //Get user shopping cart
     @Transactional
     public Order getUserCart (String userEmail) {
         User user = userRepository.findUserByEmail(userEmail);
 
         return user.getUserCart();
+    }
+
+    @Transactional
+    public boolean closeOrder(String userEmail) throws BadRequestException {
+        User user = userRepository.findUserByEmail(userEmail);
+        try {
+            if (user.closeOrder()) {
+                userRepository.save(user);
+                return true;
+            }
+            return false;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new BadRequestException();
+        }
     }
 
     public User partialUpdate(String email, UserPatchRequest patchRequest) {

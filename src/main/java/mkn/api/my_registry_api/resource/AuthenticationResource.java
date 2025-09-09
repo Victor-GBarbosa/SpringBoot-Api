@@ -40,17 +40,22 @@ public class AuthenticationResource {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody @Valid User user) {
+    public ResponseEntity<?> register(@RequestBody @Valid User user) {
 
-        if(this.repository.findUserByEmail(user.getEmail()) != null) {
-            return ResponseEntity.badRequest().build();
+        try{
+            if (this.repository.findUserByEmail(user.getEmail()) != null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            user.setRoleStatus(UserRole.USER);
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            User savedUser = this.repository.save(user);
+
+            return ResponseEntity.ok(savedUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("error " + e.getMessage());
         }
-
-        user.setRoleStatus(UserRole.USER);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        User savedUser = this.repository.save(user);
-
-        return ResponseEntity.ok(savedUser);
     }
 
 

@@ -31,24 +31,10 @@ public class UserRolePatchAutorizationManager implements org.springframework.sec
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         HttpServletRequest request = context.getRequest();
-        String path = request.getRequestURI();
-        Matcher matcher = emailPattern.matcher(path);
-        String pathEmail = null;
-        if (matcher.find()) {
-            pathEmail = matcher.group(1);
-        }
-        try {
-            BufferedReader reader = request.getReader();
-            StringBuilder bodyBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                bodyBuilder.append(line);
-            }
-            String requestBody = bodyBuilder.toString();
 
-            // Parse do JSON para extrair a nova role
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(requestBody);
+        String pathEmail = AuthorizationManagerUtils.getEmailOnURI(context);
+
+            JsonNode jsonNode = AuthorizationManagerUtils.getRequestBody(context);
             Integer newRole = jsonNode.get("role").asInt();
 
             String token = request.getHeader("Authorization");
@@ -68,8 +54,5 @@ public class UserRolePatchAutorizationManager implements org.springframework.sec
             } else {
                 return new AuthorizationDecision(false);
             }
-            } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

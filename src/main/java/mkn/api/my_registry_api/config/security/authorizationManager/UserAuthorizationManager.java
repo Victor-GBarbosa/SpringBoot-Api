@@ -18,26 +18,31 @@ public class UserAuthorizationManager implements org.springframework.security.au
 
     @Autowired
     private TokenService tokenService;
-    private final Pattern emailPattern = Pattern.compile("/users/email/([^/]+)");
+    private final Pattern emailPattern = Pattern.compile(".*/users/.*?([^@/\\s]+@[^@/\\s]+\\.[^/\\s]+)");
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         HttpServletRequest request = context.getRequest();
         String path = request.getRequestURI();
-
+        System.out.println("URL: " + path);
+        System.out.println("aaaaaa");
         Matcher matcher = emailPattern.matcher(path);
+//        System.out.println(matcher.group(1));
         if (matcher.find()) {
             String emailNoPath = matcher.group(1);
 
             String token = request.getHeader("Authorization");
+            System.out.println(token);
+            System.out.println(tokenService.validadeToken(token));
+            System.out.println(emailNoPath);
             if (token != null) {
 
                 String emailNoToken = tokenService.validadeToken(token);
-
                 return new AuthorizationDecision(emailNoPath.equals(emailNoToken));
             }
+            System.out.println("entrou no if");
         }
-
+        System.out.println("talvez não tenha entrado no if");
         return new AuthorizationDecision(false);
     }
 }

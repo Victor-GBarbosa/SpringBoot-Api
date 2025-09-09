@@ -16,7 +16,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
@@ -51,7 +51,6 @@ public class Product implements Serializable {
 
     //Getters and Setters
 
-    @JsonIgnore
     public User getUser() {
         return user;
     }
