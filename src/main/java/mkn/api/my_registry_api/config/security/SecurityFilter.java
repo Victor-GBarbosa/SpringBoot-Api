@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class  SecurityFilter extends OncePerRequestFilter {
@@ -44,5 +46,6 @@ public class  SecurityFilter extends OncePerRequestFilter {
             return null;
         }
         return authHeader;
+
     }
 }

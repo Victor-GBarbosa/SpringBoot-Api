@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +33,7 @@ public class Order implements Serializable {
             fetch = FetchType.EAGER
     )
     private List<OrderProduct> orderProductList = new ArrayList<>();
+
 
     @Column(nullable = false)
     private OrderStatus orderStatus;

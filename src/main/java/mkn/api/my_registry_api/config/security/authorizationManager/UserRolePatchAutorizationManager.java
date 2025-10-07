@@ -41,8 +41,6 @@ public class UserRolePatchAutorizationManager implements org.springframework.sec
 
 
             User user = userRepository.findUserByEmail(tokenService.validadeToken(token));
-            System.out.println("TOKEN = " + token + tokenService.validadeToken(token) + "\n" +  pathEmail +"\n\n\n\n\n\n");
-            System.out.println(pathEmail == user.getEmail());
             if (user.getRole() <= 3 && user.getEmail().equals(pathEmail)) {
                 if(newRole <= 2) {
                     return new AuthorizationDecision(true);

@@ -110,6 +110,7 @@ public class User implements Serializable, UserDetails {
 
     // Getters and Setters
 
+    @JsonIgnore
     public Order getUserCart () {
         return this.order.stream()
                 .filter(x -> x.getOrderStatus() == OrderStatus.CART)

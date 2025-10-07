@@ -33,6 +33,7 @@ public class Product implements Serializable {
     @Column(length = 528)
     private String description;
 
+    @Column(length = 5120)
     private String imageUrl;
 
     //Constructors
