@@ -31,9 +31,14 @@ public class AuthenticationResource {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
 
+            User user = repository.findUserByEmail(data.login());
+
             var token = tokenService.generateToken((User)auth.getPrincipal());
 
-            return ResponseEntity.ok( "{\"token\": \"" + token + "\"}");
+
+            return ResponseEntity.ok( "{\"token\": \"" + token + "\"," +
+                    "\n\"email\": \"" + data.login() + "\"," +
+                    "\n\"id\" : \"" + user.getId() + "\"}");
         } catch (Exception e) {
             return ResponseEntity.status(401).body("{\"Status\" : \"Credenciais invalidas\"}");
         }
